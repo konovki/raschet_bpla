@@ -512,7 +512,7 @@ function performCalculations(params, airDensity) {
     
     // Скорость сваливания
     const clMax = 1.2;
-    results.stallSpeed = Math.sqrt((2 * weightKg * PHYSICS.GRAVITY) / (airDensity * wingAreaM2 * clMax)) * 3.6;
+    results.stallSpeed = Math.sqrt((2 * weightKg * PHYSICS.GRAVITY) / (airDensity * wingAreaM2 * clMax));
     
     // 2. Аккумуляторные расчеты
     const capacityAh = params.battery.capacity / 1000;
@@ -867,30 +867,53 @@ function updateSummary(results) {
     const twr = results.thrustToWeight;
     
     // Анализ тяговооруженности
-    if (twr >= 1.3) {
-        performanceClass = 'Акробатический';
-        performanceColor = 'excellent';
-        recommendations.push('Отличная тяговооруженность для 3D и акробатики');
-    } else if (twr >= 1.0) {
-        performanceClass = 'Спортивный';
-        performanceColor = 'good';
-        recommendations.push('Хорошая производительность для спортивных полетов');
-    } else if (twr >= 0.7) {
-        performanceClass = 'Крейсерский';
-        performanceColor = 'warning';
-        recommendations.push('Достаточно для крейсерских полетов');
-        warnings.push('Тяговооруженность на нижней границе для уверенного взлета');
-    } else if (twr >= 0.5) {
-        performanceClass = 'Тренировочный';
-        performanceColor = 'warning';
-        issues.push('Низкая тяговооруженность');
-        warnings.push('Требуется длинная взлетная полоса');
-    } else {
-        performanceClass = 'Недостаточная';
-        performanceColor = 'critical';
-        issues.push('Критически низкая тяговооруженность');
-        issues.push('Взлет может быть невозможен');
-    }
+// Установим реалистичный физический лимит для современных технологий.
+// Гоночные FPV дроны редко превышают 8.0-10.0 даже в пике.
+const MAX_REALISTIC_TWR = 10.0; 
+
+if (twr > MAX_REALISTIC_TWR) {
+    // НОВАЯ КАТЕГОРИЯ: Превышение физического лимита
+    performanceClass = 'Превышающая';
+    performanceColor = 'critical'; // Красный цвет, так как это ошибка в данных
+    issues.push('Значение тяговооруженности превышает физически возможные лимиты для существующих моделей');
+    issues.push(`Введено: ${twr.toFixed(2)}, Максимум для гоночных: ~${MAX_REALISTIC_TWR}`);
+    recommendations.push('Проверьте корректность введенных данных (вес аппарата или тягу двигателей)');
+} else if (twr >= 1.3) {
+    // КАТЕГОРИЯ: Гоночные (Racing / Extreme FPV)
+    performanceClass = 'Гоночный';
+    performanceColor = 'excellent';
+    recommendations.push('Экстремальная тяговооруженность для профессиональных гонок и сложнейшего 3D пилотажа');
+    recommendations.push('Мгновенный вертикальный разгон и выполнение любых фигур высшего пилотажа');
+} else if (twr >= 1.0) {
+    // КАТЕГОРИЯ: Акробатический / Freestyle
+    performanceClass = 'Акробатический';
+    performanceColor = 'good';
+    recommendations.push('Отличная тяговооруженность для фристайла и активной акробатики');
+    recommendations.push('Уверенный вертикальный взлет и висение с большим запасом мощности');
+} else if (twr >= 0.7) {
+    // КАТЕГОРИЯ: Спортивный / Динамичный крейсер
+    performanceClass = 'Спортивный';
+    performanceColor = 'good'; // Или 'warning', если хотите подчеркнуть нехватку для трюков
+    recommendations.push('Хорошая производительность для динамичных полетов и умеренной акробатики');
+    warnings.push('Вертикальный набор высоты будет ощутимым, но не мгновенным при полной загрузке');
+} else if (twr >= 0.5) {
+    // КАТЕГОРИЯ: Крейсерский / Разведывательный
+    performanceClass = 'Крейсерский';
+    performanceColor = 'warning';
+    recommendations.push('Достаточно для стабильных крейсерских полетов, разведки и картографии');
+    warnings.push('Тяговооруженность на нижней границе для энергичных маневров');
+    warnings.push('Требуется более длинная взлетная полоса или катапульта');
+} else {
+    // КАТЕГОРИЯ: Недостаточная
+    performanceClass = 'Недостаточная';
+    performanceColor = 'critical';
+    issues.push('Критически низкая тяговооруженность');
+    issues.push('Взлет в спокойном воздухе может быть невозможен');
+    warnings.push('Высокий риск сваливания при попытке набора высоты');
+    recommendations.push('Снизить вес полезной нагрузки или установить более мощные двигатели');
+}
+
+
     
     // Проверка запасов по току ESC
     if (results.currentMarginESC < 5) {
@@ -924,7 +947,6 @@ function updateSummary(results) {
     summaryHTML += `<div><strong>Нагрузка на крыло:</strong> ${results.wingLoading.toFixed(1)} кг/м² (${results.wingLoadingGdm2.toFixed(1)} г/дм²)</div>`;
     summaryHTML += `<div><strong>Удельная мощность:</strong> ${results.powerLoading.toFixed(0)} Вт/кг</div>`;
     summaryHTML += `<div><strong>Время полета:</strong> ${results.mixedFlightTime.toFixed(1)} мин</div>`;
-    summaryHTML += `<div><strong>Макс. скорость:</strong> ${results.theoreticalMaxSpeed.toFixed(1)} км/ч</div>`;
     summaryHTML += `<div><strong>Скорость сваливания:</strong> ${results.stallSpeed.toFixed(1)} км/ч</div>`;
     summaryHTML += `</div>`;
     
