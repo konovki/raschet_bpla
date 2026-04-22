@@ -35,6 +35,16 @@
                 <button id="saveBtn" class="btn btn-secondary">Сохранить</button>
                 <button id="resetBtn" class="btn btn-warning">Сбросить</button>
             </div>
+            
+            <div style="margin-top: 20px; background: #1e293b; padding: 15px; border-radius: 8px;">
+                <h3 style="color: #f1f5f9; margin-top: 0; font-size: 16px; display: flex; justify-content: space-between; align-items: center;">
+                    Мои проекты
+                    <button onclick="saveProject()" style="background: #10b981; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px;">+ Сохранить текущий</button>
+                </h3>
+                <div id="savedProjectsList">
+                    <div style="color: #64748b; font-size: 13px;">Загрузка...</div>
+                </div>
+            </div>
 
             <!-- ПАРАМЕТРЫ СИСТЕМЫ -->
             <div class="parameters-row">
@@ -110,7 +120,6 @@
                                 </div>
                             </div>
 
-
                             <div class="input-group">
                                 <label for="temperature">Температура воздуха</label>
                                 <div class="input-with-unit">
@@ -121,7 +130,7 @@
                         </div>
                     </div>
 
-                  <!-- Столбец 2: Аккумулятор -->
+                  <!-- Столбец 2: Аккумулятор (ИСПРАВЛЕНО: value совпадают с JS) -->
 <div class="parameter-column">
     <div class="parameter-section">
         <h3>Аккумулятор</h3>
@@ -131,7 +140,8 @@
             <label for="batteryType">Тип батареи</label>
             <div class="input-with-unit">
                 <select id="batteryType" class="select-field">
-                     <option value="default">выбрать</option>
+                    <option value="default">Выбрать...</option>
+                    <!-- Значения value теперь точно совпадают с ключами в batteryDatabase -->
                     <option value="lipo150_80_120">LiPo 150mAh - 80/120C</option>
                     <option value="lipo1600_80_120">LiPo 1600mAh - 80/120C</option>
                     <option value="lipo3000_80_120" selected>LiPo 3000mAh - 80/120C</option>
@@ -208,6 +218,7 @@
         </div>
     </div>
 </div>
+
                     <!-- Столбец 3: Мотор -->
                     <div class="parameter-column">
                         <div class="parameter-section">
@@ -240,7 +251,6 @@
                                     </select>
                                 </div>
                             </div>
-
 
                             <div class="input-group">
                                 <label for="motorKv">KV рейтинг</label>
@@ -301,7 +311,7 @@
                         </div>
                     </div>
 
-                    <!-- Столбец 4: Пропеллер -->
+                    <!-- Столбец 4: Пропеллер (ИСПРАВЛЕНО: value совпадают с JS) -->
                     <div class="parameter-column">
                         <div class="parameter-section">
                             <h3>Пропеллер</h3>
@@ -311,18 +321,11 @@
                                 <label for="propType">Тип</label>
                                 <div class="input-with-unit">
                                     <select id="propType" class="select-field">
-                                        <option value="standard">Generic - thin</option>
-                                        <option value="slowfly">Generic - normal</option>
-                                        <option value="electric" selected>Generic - wide</option>
-                                         <option value="standard">Aeronaut CamCarbon</option>
-                                        <option value="slowfly">APC SlowFly SF</option>
-                                        <option value="electric" selected>APC Electric E</option>
-                                         <option value="standard">APC Speed E</option>
-                                        <option value="slowfly">APC MultiRotor MR</option>
-                                        <option value="electric" selected>Fiala Classic</option>
-                                         <option value="standard">Fiala Classic 3-Blades</option>
-                                        <option value="slowfly">Fiala Electric E3</option>
-                                        <option value="electric" selected>GemFan</option>
+                                        <!-- Значения value теперь точно совпадают с ключами в propellerDatabase -->
+                                        <option value="generic_thin">Generic - thin</option>
+                                        <option value="generic_normal">Generic - normal</option>
+                                        <option value="generic_wide" selected>Generic - wide</option>
+                                        <option value="aeronaut_camcarbon">Aeronaut CamCarbon</option>
                                     </select>
                                 </div>
                             </div>
@@ -331,17 +334,11 @@
                                 <label for="propTwistAngle">Угол кручения:</label>
                                 <div class="input-with-unit">
                                     <select id="propTwistAngle" class="select-field">
-                                        <option value="low">+7.0°</option>
-                                        <option value="medium" selected>+6.0°</option>
-                                        <option value="high">+5.0°</option>
-                                          <option value="low">+3.5°</option>
-                                        <option value="medium" selected>+3.0°</option>
-                                        <option value="high">+2.5°</option>
-                                          <option value="low">+2.0°</option>
-                                        <option value="medium" selected>0°</option>
-                                        <option value="high">-2.5°</option>
-                                         <option value="medium" selected>-5.0°</option>
-                                        <option value="high">-7.0°</option>
+                                        <option value="+7.0°">+7.0°</option>
+                                        <option value="+6.0°" selected>+6.0°</option>
+                                        <option value="+5.0°">+5.0°</option>
+                                        <option value="+3.5°">+3.5°</option>
+                                        <option value="0°">0°</option>
                                     </select>
                                 </div>
                             </div>
@@ -383,7 +380,7 @@
                         </div>
                     </div>
 
-                    <!-- Столбец 5: Регулятор -->
+                    <!-- Столбец 5: Регулятор (ИСПРАВЛЕНО: value совпадают с JS) -->
                     <div class="parameter-column">
                         <div class="parameter-section">
                             <h3>Регулятор (ESC)</h3>
@@ -394,6 +391,7 @@
                     <div class="input-with-unit">
                         <select id="escModel" class="select-field">
                             <option value="default">выбрать</option>
+                            <!-- Значения value теперь точно совпадают с ключами в escDatabase -->
                             <option value="hobbywing_skywalker_30a">Hobbywing Skywalker 30A</option>
                             <option value="hobbywing_skywalker_40a" selected>Hobbywing Skywalker 40A</option>
                             <option value="hobbywing_skywalker_50a">Hobbywing Skywalker 50A</option>
@@ -452,6 +450,31 @@
 
                 </div>
             </div>
+              <!-- Блок фильтрации по цене и итоговой стоимости -->
+<div class="price-filter-section" style="margin-top: 20px; padding: 15px; background: #1e293b; border-radius: 8px; border: 1px solid #334155;">
+    <h3 style="color: #f1f5f9; margin-top: 0; font-size: 16px;">💰 Бюджет и Стоимость</h3>
+    
+    <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px;">
+        <label for="budgetFilter" style="color: #94a3b8; font-size: 14px;">Макс. бюджет:</label>
+        <input type="number" id="budgetFilter" class="input-field" placeholder="0" min="0" step="500" 
+               style="background: #0f172a; border: 1px solid #475569; color: white; padding: 6px 10px; border-radius: 4px; width: 130px;">
+        <span style="color: #64748b; font-size: 12px;">(₽)</span>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #334155; padding-top: 10px;">
+        <span style="color: #f1f5f9; font-weight: bold;">Итоговая смета:</span>
+        <span id="totalCostDisplay" style="font-size: 18px; font-weight: bold; color: #10b981;">0 ₽</span>
+    </div>
+    
+    <div style="margin-top: 8px; font-size: 11px; color: #64748b;">
+        * Включено: моторы, ESC, АКБ и пропеллеры (2 шт/мотор).
+    </div>
+</div>
+
+<div id="budgetRecommendations" style="margin-top: 15px; padding: 12px; background-color: #0f172a; border-radius: 6px; border-left: 4px solid #3b82f6; font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: 14px; line-height: 1.5; color: #f1f5f9;">
+    <div style="color: #94a3b8; font-style: italic;">Ожидание ввода бюджета...</div>
+</div>
+
 
             <!-- ДИАГРАММЫ ЭФФЕКТИВНОСТИ -->
             <div class="charts-row">
@@ -664,3 +687,4 @@
     <script src="configurator.js"></script>
 </body>
 </html>
+
